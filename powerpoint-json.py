@@ -77,13 +77,9 @@ def slide_function(slide):
     slide_dict = collections.OrderedDict()
     for shape in slide.Shapes:
         shape_name = shape.Name
-        if shape_name[:5] == 'TITLE':
-            slide_dict[shape_name] = table_function(shape)
-        elif shape_name[:5] == 'ISSUE':
+        if shape_name[:5] == 'PAIRS':
             slide_dict[shape_name] = pairs_function(shape)
-        elif shape_name[:5] == 'PAIRS':
-            slide_dict[shape_name] = pairs_function(shape)
-        elif shape_name[:5] == 'TABLE':
+        if shape_name[:5] == 'TABLE':
             slide_dict[shape_name] = table_function(shape)
         if shape_name[:6] == 'EXPORT':
             if shape_name[:6] != 'IGNORE':
@@ -94,13 +90,9 @@ def slide_function_PSOTSL(slide):
     slide_dict = collections.OrderedDict()
     for shape in slide.Shapes:
         shape_name = shape.Name
-        if shape_name[:5] == 'TITLE':
-            slide_dict[shape_name] = table_function(shape)
-        elif shape_name[:5] == 'ISSUE':
+        if shape_name[:5] == 'PAIRS':
             slide_dict[shape_name] = pairs_function(shape)
-        elif shape_name[:5] == 'PAIRS':
-            slide_dict[shape_name] = pairs_function(shape)
-        elif shape_name[:5] == 'TABLE':
+        if shape_name[:5] == 'TABLE':
             slide_dict[shape_name] = table_function(shape)
         if shape_name[:6] == 'EXPORT':
             if shape_name[:6] != 'IGNORE':
