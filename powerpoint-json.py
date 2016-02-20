@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """powerpoint-json.py: Extract data from a ppt file and outputs
-a png file if there is a Group shape in each slide
+a png file for shapes names not equal to TABLE, PAIRS or IGNORE in each slide
 and a json file for the textual data in the ppt file.
 """
 
@@ -75,28 +75,36 @@ def table_function(shape):
 
 def slide_function(slide):
     slide_dict = collections.OrderedDict()
+    png_export_list = []
     for shape in slide.Shapes:
         shape_name = shape.Name
         if shape_name[:5] == 'PAIRS':
             slide_dict[shape_name] = pairs_function(shape)
-        if shape_name[:5] == 'TABLE':
+        elif shape_name[:5] == 'TABLE':
             slide_dict[shape_name] = table_function(shape)
-        if shape_name[:6] == 'EXPORT':
-            if shape_name[:6] != 'IGNORE':
-                shape.Export( os.path.join(outputpath, outputfilename+'-'+str(len(ppt_array))+'_'+datetimestamp+'.png') , ppShapeFormatPNG)
+        elif shape_name[:6] != 'IGNORE':
+            png_export_list.append(shape.ZOrderPosition)
+    slide.Shapes.Range(png_export_list).Export( os.path.join(outputpath, outputfilename+'-'+str(len(ppt_array))+'_'+datetimestamp+'.png'), ppShapeFormatPNG)
+#        if shape_name[:6] == 'EXPORT':
+#            if shape_name[:6] != 'IGNORE':
+#                shape.Export( os.path.join(outputpath, outputfilename+'-'+str(len(ppt_array))+'_'+datetimestamp+'.png') , ppShapeFormatPNG)
     return slide_dict
 
 def slide_function_PSOTSL(slide):
     slide_dict = collections.OrderedDict()
+    png_export_list = []
     for shape in slide.Shapes:
         shape_name = shape.Name
         if shape_name[:5] == 'PAIRS':
             slide_dict[shape_name] = pairs_function(shape)
-        if shape_name[:5] == 'TABLE':
+        elif shape_name[:5] == 'TABLE':
             slide_dict[shape_name] = table_function(shape)
-        if shape_name[:6] == 'EXPORT':
-            if shape_name[:6] != 'IGNORE':
-                shape.Export( os.path.join(outputpath, outputfilename+'-'+'0'+'_'+datetimestamp+'.png') , ppShapeFormatPNG)
+        elif shape_name[:6] != 'IGNORE':
+            png_export_list.append(shape.ZOrderPosition)
+    slide.Shapes.Range(png_export_list).Export(os.path.join(outputpath, outputfilename+'-'+'0'+'_'+datetimestamp+'.png'), ppShapeFormatPNG)
+#        if shape_name[:6] == 'EXPORT':
+#            if shape_name[:6] != 'IGNORE':
+#                shape.Export( os.path.join(outputpath, outputfilename+'-'+'0'+'_'+datetimestamp+'.png') , ppShapeFormatPNG)
     return slide_dict
     
 
