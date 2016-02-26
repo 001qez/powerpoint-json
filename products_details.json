@@ -117,7 +117,7 @@
             "TABLE_2": 1, 
             "TABLE_3": 1
         }
-    },
+    }, 
     "HADRTSL": {
         "upload_path": "\\\\192.168.5.26\\nowcast\\Military\\Forecaster\\hadr-tsl\\"
     }, 
