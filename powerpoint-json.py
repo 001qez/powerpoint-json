@@ -175,7 +175,7 @@ try:
         g.close()
 except:
     print 'There is an error with "products_details.json" file in this executable folder.'
-    print os.path.dirname(sys.executable) + ' or in E:\\powerpoint-json\exe '
+    print os.path.dirname(sys.executable) + ' or in E:\\powerpoint-json\\exe '
     print 'This file might be missing or changed incorrectly or corrupted.'
     print 'Restoring this file from the zip archive might fix this error.'
     print ''
