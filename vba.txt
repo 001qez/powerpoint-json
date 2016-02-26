@@ -1,0 +1,79 @@
+Sub check_tag()
+
+MsgBox "This macro is for check the Tags for the selected object"
+
+With ActiveWindow.Selection.ShapeRange(1).Tags
+    If .Count = 0 Then
+        MsgBox "The selected item has no Tags"
+    End If
+    For i = 1 To .Count
+        MsgBox "Tag #" & i & ": Name = " & .Name(i) & " | Tag #" & i & ": Value = " & .Value(i)
+    Next
+End With
+
+End Sub
+
+Sub add_tag()
+
+MsgBox ("This macro is for adding Tags to the selected object")
+
+Dim inputName As String
+Dim inputValue As String
+
+inputName = InputBox("Enter Tag Name")
+inputValue = InputBox("Enter Value for " & inputName)
+
+If inputName <> "" And inputValue <> "" Then
+    ActiveWindow.Selection.ShapeRange(1).Tags.Add inputName, inputValue
+Else
+    MsgBox "Tag Name or Tag Value was empty"
+End If
+
+End Sub
+
+Sub remove_tag()
+
+If MsgBox("Remove all Tags for the selected object", vbYesNo) = vbYes Then
+    With ActiveWindow.Selection.ShapeRange(1).Tags
+        If .Count = 0 Then
+            MsgBox "The selected item has no Tags!"
+        Else
+            For i = 1 To .Count
+                .Delete (.Name(1))
+            Next
+            MsgBox "All Tags has been deleted."
+        End If
+    End With
+Else
+    MsgBox "No Tags were removed."
+End If
+
+End Sub
+
+Sub check_all_tags()
+
+For Each s In Application.ActivePresentation.Slides(1).Shapes
+    With s
+        If .Tags.Count = 0 Then
+            MsgBox .Name & " has no Tags!"
+        Else
+            For i = 1 To .Tags.Count
+                MsgBox .Name & " | " & .Tags.Name(1) & " | " & .Tags.Item("NAME")
+            Next
+        End If
+    End With
+Next
+
+End Sub
+
+Sub make_tags()
+
+For Each s In Application.ActivePresentation.Slides(1).Shapes
+    With s
+        If Left(.Name, 5) = "PAIRS" Or Left(.Name, 5) = "TABLE" Or Left(.Name, 6) = "IGNORE" Then
+            .Tags.Add "NAME", .Name
+        End If
+    End With
+Next
+
+End Sub
