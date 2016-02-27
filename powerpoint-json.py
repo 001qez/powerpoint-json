@@ -26,6 +26,9 @@ g = globals()
 for c in dir(MSO.constants):    g[c] = getattr(MSO.constants, c)
 for c in dir(MSPPT.constants):  g[c] = getattr(MSPPT.constants, c)
 
+if len(sys.argv) < 2:
+    print 'Drag and drop PowerPoint file on the executable!'
+
 ## Target powerpoint file
 targetpptpath = os.path.abspath(sys.argv[1])
 ## Output directory
