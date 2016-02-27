@@ -28,6 +28,7 @@ for c in dir(MSPPT.constants):  g[c] = getattr(MSPPT.constants, c)
 
 if len(sys.argv) < 2:
     print 'Drag and drop PowerPoint file on the executable!'
+    raw_input("Press Enter to close")
 
 ## Target powerpoint file
 targetpptpath = os.path.abspath(sys.argv[1])
