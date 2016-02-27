@@ -14,6 +14,6 @@ base = 'Console'
 
 setup(  name = "powerpoint-json",
         version = "0.7",
-        description = "powerpoint-json",
+        description = "powerpoint-json version 7",
         options = {"build_exe": build_exe_options},
         executables = [Executable("powerpoint-json.py", base=base)])
