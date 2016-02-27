@@ -77,6 +77,8 @@ def pairs_function(shape, shape_name):
     temp_dict = collections.OrderedDict()
     rows_count = shape.Table.Rows.Count
     cols_count = shape.Table.Columns.Count
+    # Prints a message on the Console if the no. of columns for a shape is
+    # different from the expected no. stated in products_details.json
     if cols_count != products_details[product_code]['json_items'][shape_name]:
         print 'Warning!'
         print shape_name + ' has ' + str(cols_count) + ' column(s). Expected ' + str(products_details[product_code]['json_items'][shape_name]) + ' column(s).'
@@ -92,6 +94,8 @@ def table_function(shape, shape_name):
     title = cell_text(shape.Table.Rows(1).Cells.Item(1))
     rows_count = shape.Table.Rows.Count
     cols_count = shape.Table.Columns.Count
+    # Prints a message on the Console if the no. of columns for a shape is
+    # different from the expected no. stated in products_details.json
     if cols_count != products_details[product_code]['json_items'][shape_name]:
         print 'Warning!'
         print shape_name + ' has ' + str(cols_count) + ' column(s). Expected ' + str(products_details[product_code]['json_items'][shape_name]) + ' column(s).'
@@ -115,6 +119,7 @@ def slide_function(slide):
     slide_dict = create_empty_slide_dict()
     png_export_list = []
     index = 1
+    detected_shape_names = []
     for shape in slide.Shapes:
         
         if shape.Tags.Item('NAME') in products_details[product_code]['json_items']:
@@ -129,12 +134,19 @@ def slide_function(slide):
         if shape_name in products_details[product_code]['json_items']:
             if shape_name[:5] == 'PAIRS':
                 slide_dict[shape_name] = pairs_function(shape, shape_name)
+                detected_shape_names.append(shape_name)
             if shape_name[:5] == 'TABLE':
                 slide_dict[shape_name] = table_function(shape, shape_name)
+                detected_shape_names.append(shape_name)
         elif shape_name[:6] != 'IGNORE':
             png_export_list.append(index)
         index += 1
-    
+
+    for key in products_details[product_code]['json_items']:
+        if not key in detected_shape_names:
+            print 'Warning!'
+            print key + ' was expected but not detected in the slide.'
+            print 'Using a "pristine" copy of the PowerPoint file and redoing the forecast on it might solve this error.'
     if len(png_export_list) > 0:
         slide.Shapes.Range(png_export_list).Export( os.path.join(outputpath, outputfilename+'-'+str(len(ppt_array))+'_'+datetimestamp+'.png'), ppShapeFormatPNG)
     return slide_dict
@@ -143,6 +155,7 @@ def slide_function_PSOTSL(slide):
     slide_dict = create_empty_slide_dict()
     png_export_list = []
     index = 1
+    detected_shape_names = []
     for shape in slide.Shapes:
         
         if shape.Tags.Item('NAME') in products_details[product_code]['json_items']:
@@ -157,12 +170,19 @@ def slide_function_PSOTSL(slide):
         if shape_name in products_details[product_code]['json_items']:
             if shape_name[:5] == 'PAIRS':
                 slide_dict[shape_name] = pairs_function(shape, shape_name)
+                detected_shape_names.append(shape_name)
             if shape_name[:5] == 'TABLE':
                 slide_dict[shape_name] = table_function(shape, shape_name)
+                detected_shape_names.append(shape_name)
         elif shape_name[:6] != 'IGNORE':
             png_export_list.append(index)
         index += 1
 
+    for key in products_details[product_code]['json_items']:
+        if not key in detected_shape_names:
+            print 'Warning!'
+            print key + ' was expected but not detected in the slide.'
+            print 'Using a "pristine" copy of the PowerPoint file and redoing the forecast on it might solve this error.'
     if len(png_export_list) > 0:
         slide.Shapes.Range(png_export_list).Export( os.path.join(outputpath, outputfilename+'-'+'0'+'_'+datetimestamp+'.png'), ppShapeFormatPNG)
     return slide_dict
@@ -174,11 +194,10 @@ try:
         products_details = json.load(g, object_pairs_hook=collections.OrderedDict)
         g.close()
 except:
-    print 'There is an error with "products_details.json" file in this executable folder.'
-    print os.path.dirname(sys.executable) + ' or in E:\\powerpoint-json\\exe '
+    print 'There is an error with "products_details.json" file in this executable folder:'
+    print os.path.dirname(sys.executable)
     print 'This file might be missing or changed incorrectly or corrupted.'
     print 'Restoring this file from the zip archive might fix this error.'
-    print ''
     raw_input("Press Enter to close")
     sys.exit()
 
@@ -190,10 +209,10 @@ if not product_code in products_details:
     print list(products_details)
     print 'Please check the input PowerPoint filename follows the convention.'
     print ''
-    print 'For OverseasSail, OverseasSailWindTemp, etc., '
-    print 'the PowerPoint filename should contains only 2 underscore characters.'
-    print 'Please check that you do not use space or underscore characters for AreaName/Key'
-    print ''
+    print 'Note: For OverseasSail, OverseasSailWindTemp, ... '
+    print 'the PowerPoint filename has 3 arguments separated by underscore. Example: '
+    print '"OverseasSail_<digit>_<Key>.ppt", "OverseasSailWindTemp_<digit>_<Key>.ppt"'
+    print 'Please check that there is no space or underscore characters in <Key>'
     raw_input("Press Enter to close")
     sys.exit()
 
@@ -252,7 +271,7 @@ with io.open( os.path.join(outputpath, outputfilename+'_'+datetimestamp+'.json')
     f.write(unicode(ff))
     f.close()
 
-    print 'Please copy and paste files into '
+    print 'If no errors, copy and paste files into '
     print products_details[product_code]['upload_path']
     print ''
 
