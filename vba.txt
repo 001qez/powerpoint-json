@@ -68,12 +68,19 @@ End Sub
 
 Sub make_tags()
 
-For Each s In Application.ActivePresentation.Slides(1).Shapes
-    With s
-        If Left(.Name, 5) = "PAIRS" Or Left(.Name, 5) = "TABLE" Or Left(.Name, 6) = "IGNORE" Then
-            .Tags.Add "NAME", .Name
-        End If
-    End With
-Next
+Dim inputName As String
+inputName = InputBox("Enter password")
+
+If inputName = "LJS" Then
+    For Each s In Application.ActivePresentation.Slides(1).Shapes
+        With s
+            If Left(.Name, 5) = "PAIRS" Or Left(.Name, 5) = "TABLE" Or Left(.Name, 6) = "IGNORE" Then
+                .Tags.Add "NAME", .Name
+            End If
+        End With
+    Next
+Else
+    MsgBox "Wrong password"
+End If
 
 End Sub
