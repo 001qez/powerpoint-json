@@ -211,12 +211,20 @@ if not product_code in products_details:
     print product_code + ' is not a recognised product name!'
     print 'Recognised product name are:'
     print list(products_details)
-    print 'Please check the input PowerPoint filename follows the convention.'
+    print 'Please check the input PowerPoint filename.'
     print ''
     print 'Note: For OverseasSail, OverseasSailWindTemp, ... '
     print 'the PowerPoint filename has 3 arguments separated by underscore. Example: '
-    print '"OverseasSail_<digit>_<Key>.ppt", "OverseasSailWindTemp_<digit>_<Key>.ppt"'
-    print 'Please check that there is no space or underscore characters in <Key>'
+    print '"OverseasSail_<DisplayDays>_<Key>.ppt", "OverseasSailWindTemp_<DisplayDays>_<Key>.ppt"'
+    print 'Please also ensure that there is no space or underscore characters in <Key>'
+    raw_input("Press Enter to close")
+    sys.exit()
+if product_code in ['OverseasSail', 'OverseasSailWindTemp', 'HADR', 'HADRTSL', 'PSO', 'PSOTSL'] and len(outputfilename.split('_')) != 3:
+    print 'ERROR!'
+    print 'Note: For OverseasSail, OverseasSailWindTemp, ... '
+    print 'the PowerPoint filename has 3 arguments separated by underscore. Example: '
+    print '"OverseasSail_<DisplayDays>_<Key>.ppt", "OverseasSailWindTemp_<DisplayDays>_<Key>.ppt"'
+    print 'Please also ensure that there is no space or underscore characters in <Key>'
     raw_input("Press Enter to close")
     sys.exit()
 
