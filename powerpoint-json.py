@@ -210,7 +210,7 @@ if not product_code in products_details:
     print 'ERROR!'
     print product_code + ' is not a recognised product name!'
     print 'Recognised product name are:'
-    print list(products_details)
+    print ', '.join(products_details)
     print 'Please check the input PowerPoint filename.'
     print ''
     print 'Note: For OverseasSail, OverseasSailWindTemp, ... '
