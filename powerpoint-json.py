@@ -18,7 +18,7 @@
 
 __author__      = "LJS"
 
-import win32com.client, os.path, sys, io, json, collections
+import win32com.client, os.path, sys, io, json, collections, re
 from datetime import datetime
 
 import MSO, MSPPT
@@ -271,6 +271,60 @@ with io.open( os.path.join(outputpath, outputfilename+'_'+datetimestamp+'.json')
 
         slide = Presentation.Slides(1)
         ppt_array['HADR'] = slide_function(slide)
+
+    elif product_code == 'ITCZ':
+
+        ppt_array = []
+        slide = Presentation.Slides(1)
+        slide_dict = slide_function(slide)
+
+        itcz_issued_text = slide_dict['TABLE_0']['table_data'][0][-1]
+        def itcz_get_name(in_text):
+            try:                
+                a = [x for x in in_text.split() if ("/" in x or "," in x)]
+                if a:
+                    return a[0]
+                else:
+                    return "XXX/TN,"
+            except:
+                return "XXX/TN"
+        def itcz_get_datetime_value(in_text):
+            try:
+                a = [x for x in in_text.split() if ("/" in x or "," in x)]
+                if a:    
+                    datetime_list = in_text.split()[in_text.split().index(a[0])+1:]
+                    datetime_str = "".join(datetime_list)
+                    if re.search('\d\d\D\D\D\d\d\d\d\d\d\d\dhr', datetime_str):
+                        return datetime.strptime(datetime_str, "%d%b%Y%H%Mhr")
+                    elif re.search('\d\D\D\D\d\d\d\d\d\d\d\dhr', datetime_str):
+                        return datetime.strptime('0'+datetime_str, "%d%b%Y%H%Mhr")
+                    elif re.search('\d\d\D\D\D\D\d\d\d\d\d\d\d\dhr', datetime_str):
+                        return datetime.strptime(datetime_str[:5]+datetime_str[6:], "%d%b%Y%H%Mhr")
+                    elif re.search('\d\D\D\D\D\d\d\d\d\d\d\d\dhr', datetime_str):
+                        return datetime.strptime('0'+datetime_str[:4]+datetime_str[5:], "%d%b%Y%H%Mhr")
+
+                    elif re.search('\d\d\D\D\D\d\d\d\d\d\d\d\dh', datetime_str):
+                        return datetime.strptime(datetime_str, "%d%b%Y%H%Mh")
+                    elif re.search('\d\D\D\D\d\d\d\d\d\d\d\dh', datetime_str):
+                        return datetime.strptime('0'+datetime_str, "%d%b%Y%H%Mh")
+                    elif re.search('\d\d\D\D\D\D\d\d\d\d\d\d\d\dh', datetime_str):
+                        return datetime.strptime(datetime_str[:5]+datetime_str[6:], "%d%b%Y%H%Mh")
+                    elif re.search('\d\D\D\D\D\d\d\d\d\d\d\d\dh', datetime_str):
+                        return datetime.strptime('0'+datetime_str[:4]+datetime_str[5:], "%d%b%Y%H%Mh")
+                    else:
+                        return datetime.now()
+                else:
+                    return datetime.now()
+            except:
+                return datetime.now()
+        def itcz_produce_issued_text(text, dt):
+            return " ".join(["Issued:", text, dt.strftime("%d %b %Y %H%Mh")])
+        slide_dict['TABLE_0']['table_data'][0][-1] = itcz_produce_issued_text(
+            itcz_get_name(itcz_issued_text),
+            itcz_get_datetime_value(itcz_issued_text)
+            )
+        
+        ppt_array.append(slide_dict)
 
     else:
 
