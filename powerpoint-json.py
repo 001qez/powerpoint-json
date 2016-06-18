@@ -283,16 +283,16 @@ with io.open( os.path.join(outputpath, outputfilename+'_'+datetimestamp+'.json')
             try:                
                 a = [x for x in in_text.split() if ("/" in x or "," in x)]
                 if a:
-                    return a[0]
+                    return " ".join(in_text.split()[:in_text.split().index(a[-1])+1])
                 else:
-                    return "XXX/TN,"
+                    return "Issued: XXX/TN,"
             except:
-                return "XXX/TN"
+                return "Issued: XXX/TN,"
         def itcz_get_datetime_value(in_text):
             try:
                 a = [x for x in in_text.split() if ("/" in x or "," in x)]
                 if a:    
-                    datetime_list = in_text.split()[in_text.split().index(a[0])+1:]
+                    datetime_list = in_text.split()[in_text.split().index(a[-1])+1:]
                     datetime_str = "".join(datetime_list)
                     if re.search('\d\d\D\D\D\d\d\d\d\d\d\d\dhr', datetime_str):
                         return datetime.strptime(datetime_str, "%d%b%Y%H%Mhr")
@@ -318,7 +318,7 @@ with io.open( os.path.join(outputpath, outputfilename+'_'+datetimestamp+'.json')
             except:
                 return datetime.now()
         def itcz_produce_issued_text(text, dt):
-            return " ".join(["Issued:", text, dt.strftime("%d %b %Y %H%Mh")])
+            return " ".join([text, dt.strftime("%d %b %Y %H%Mh")])
         slide_dict['TABLE_0']['table_data'][0][-1] = itcz_produce_issued_text(
             itcz_get_name(itcz_issued_text),
             itcz_get_datetime_value(itcz_issued_text)
